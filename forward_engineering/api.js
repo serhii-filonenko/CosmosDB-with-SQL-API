@@ -1,5 +1,6 @@
 const applyToInstanceHelper = require('./applyToInstance');
 const getIndexPolicyScript = require('./helpers/getIndexPolicyScript');
+const { PARTITION_KEY_DEFINITION_VERSION, PARTITION_KEY_KIND } = require('../shared/constants');
 
 module.exports = {
 	generateContainerScript(data, logger, callback, app) {
@@ -75,9 +76,19 @@ const updateSample = (sample, containerData, entityData) => {
 };
 
 const getPartitionKey = (_) => (containerData) => {
-	const partitionKey = _.get(containerData, '[0].partitionKey[0].name', '').trim().replace(/\/$/, '');
+	const fixNamePath = (key) => (key?.name || '').trim().replace(/\/$/, '');
+	const partitionKeys = _.get(containerData, '[0].partitionKey', []);
+	const isHierarchical = partitionKeys.length > 1;
 
-	return partitionKey;
+	if (!isHierarchical) {
+		return fixNamePath(partitionKeys[0]);
+	}
+
+	return {
+		paths: partitionKeys.map(fixNamePath),
+		version: PARTITION_KEY_DEFINITION_VERSION.v2,
+		kind: PARTITION_KEY_KIND.MultiHash,
+	};
 };
 
 const add = (key, items, mapper) => (script) => {
