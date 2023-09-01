@@ -170,6 +170,25 @@ making sure that you maintain a proper JSON format.
 				}
 			},
 			{
+				"propertyName": "",
+				"propertyKeyword": "partitionKey",
+				"propertyTooltip": "Add hierarchical partition key",
+				"propertyType": "fieldList",
+				"template": "orderedList",
+				"templateOptions": {
+					"divider": "/",
+					"front": true,
+					"entityName": false,
+					"maxField": 3
+				},
+				"hideFieldList": true,
+				"dependency": {
+					"key": "partitionKey",
+					"minLength": 1,
+					"maxLength": 2
+				}
+			},
+			{
 				"propertyName": "Unique keys",
 				"propertyKeyword": "uniqueKey",
 				"propertyType": "group",
