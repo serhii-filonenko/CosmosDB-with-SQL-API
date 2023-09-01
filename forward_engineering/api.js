@@ -28,7 +28,7 @@ module.exports = {
 				{ title: 'CosmosDB script', script },
 				{
 					title: 'Sample data',
-					script: JSON.stringify({ sample: samples }, null, 2),
+					script: JSON.stringify(samples, null, 2),
 				},
 			]);
 		} catch (e) {
