@@ -771,25 +771,41 @@ function createSchemaByPartitionKeyPath(path, documents = []) {
 		};
 	};
 
+	const getProperties = (paths) => {
+		return paths.reduce((result, path) => {
+			if (!path || !_.isString(path)) {
+				return result;
+			}
+			const namePath = path.split('.');
+
+			if (namePath.length === 0) {
+				return result;
+			}
+
+			if (!documents.some(doc => checkIfDocumentContainsPath(namePath, doc))) {
+				return result;
+			}
+
+			return {
+				...result,
+				...getNestedObject(namePath)
+			}
+		}, {})
+	};
+
 	if (!Array.isArray(path)) {
 		return false;
 	}
 
-	if (!path[0] || typeof path[0] !== 'string') {
-		return false;
-	}
+	const properties = getProperties(path);
 
-	const namePath = path[0].split('.');
-	if (namePath.length === 0) {
-		return false;
-	}
-	if (!documents.some(doc => checkIfDocumentContainsPath(namePath, doc))) {
+	if (_.isEmpty(properties)) {
 		return false;
 	}
 
 	return {
 		jsonSchema: {
-			properties: getNestedObject(namePath),
+			properties,
 		},
 	};
 }
