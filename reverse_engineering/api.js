@@ -160,6 +160,7 @@ module.exports = {
 				const { autopilot, throughput, capacityMode } = getOfferProps(offerInfo);
 				const partitionKey = getPartitionKey(collection);
 				const indexes = getIndexes(collection.indexingPolicy);
+				const isHierarchicalPartitionKey = Array.isArray(partitionKey) && partitionKey.length > 1;
 				const bucketInfo = Object.assign(
 					{
 						dbId: data.database,
@@ -173,6 +174,7 @@ module.exports = {
 						udfs,
 						TTL: getTTL(collection.defaultTtl),
 						TTLseconds: collection.defaultTtl,
+						hierarchicalPartitionKey: isHierarchicalPartitionKey,
 					},
 					indexes,
 				);

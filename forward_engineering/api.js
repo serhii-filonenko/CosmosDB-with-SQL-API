@@ -78,7 +78,7 @@ const updateSample = (sample, containerData, entityData) => {
 const getPartitionKey = (_) => (containerData) => {
 	const fixNamePath = (key) => (key?.name || '').trim().replace(/\/$/, '');
 	const partitionKeys = _.get(containerData, '[0].partitionKey', []);
-	const isHierarchical = partitionKeys.length > 1;
+	const isHierarchical = _.get(containerData, '[0].hierarchicalPartitionKey', false);
 
 	if (!isHierarchical) {
 		return fixNamePath(partitionKeys[0]);
